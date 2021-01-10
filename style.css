@@ -1,0 +1,40 @@
+.stap {
+    align-content: center;
+    align-self:center;
+    
+    height: wrap;
+    padding: 20px;
+    margin: 40px;
+    border: 1px solid #d8d8d8;
+    box-shadow: 5px 5px 15px 15px gray;
+    border-radius: 10px;
+    margin: auto;
+  width: 200px;
+  
+
+    
+  }
+  input{
+      border-radius: 10px;
+      text-size-adjust: 20p;
+      margin: auto;
+  }
+  button {
+    margin-top: 30px;
+    border: none;
+    background-color: #1E95EA;
+    color: white;
+    height: 40px;
+    width: 100px;
+    font-size: 14px;
+    
+  } 
+  .submit {
+    margin-top: 30px;
+    border: none;
+    background-color: #1E95EA;
+    color: white;
+    height: 40px;
+    width: 100px;
+    font-size: 14px;
+  } 
