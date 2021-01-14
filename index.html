@@ -1,11 +1,77 @@
 <head>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="app">
-<taps class="stap" v-show="vis" ></taps>
-        
+<body >
+    
+<div id="app" class="stuff" >
+    <div class="nav-bar">
+        <button style="margin-left: 0px; height: 100%;margin-top: 0px;width: 20%;" @click="vis= !vis" v-show="!logeed">
+           signup or login
+        </button>
+        <button  style="position: fixed;right: 0%;top: 0; height: 60px;margin-top: 0px; margin-right: 0px; " @click="vis2 =!vis2">  shoping list </button>
     </div>
+    <mylist v-show="vis2"></mylist>
+    <taps class="stapl" v-show="vis&&!logeed" ></taps>
+
+    <div class="container" v-for="(rec,index) in recipes"  >
+        
+
+        <img :src="rec.img" alt="Avatar" class="image" v-show="!sel(rec.name)">
+        
+        <div  class="selectedrec" v-show="!sel(rec.name)" >
+            
+            <div class="item1">
+                <div class="mytext" v-show="!editmode">
+                       {{rec.name}}
+                </div>
+
+            </div>
+            <div> </div>
+            <div> <button @click="addtosh(index)" > add to shoping list</button>  </div>
+            <div class="item2">
+                <div class="mytext" style="font-size: 20px; margin-top: 5px;" v-show="!editmode">
+                        {{rec.desc}}
+                </div>
+                
+
+            </div>
+            <div></div>
+            <div><button style="background-color: coral;" @click="deleterec(index)">delete</button></div>
+            <div class="mytext"style="font-size: 20px; margin-top: 0px; " >
+                <ul style="vertical-align: top;">
+                    <li v-for="inge in rec.ings" style="margin-left: 0px;">
+                        {{inge.name}}({{inge.quantity}})
+
+                    </li>
+                </ul>
+            </div>
+            <div></div>
+            <div @click="shrec(rec.name,index)"><button>Edit</button></div>
+        </div>
+        <recedit :rein="index" v-show="sel(rec.name)" ></recadd>
+        
+      
+    </div>
+            <div class="container" @click="addmode=true" >
+                
+
+                <img src="./pics/plus_2795.png" alt="Avatar" class="image" v-show="!addmode">
+                        <div class="selectedrec" v-show="!addmode">
+                            
+                                        <div class="text">Add recipe</div>
+                        </div>
+                <recadd v-show="addmode"></recadd>
+            
+            
+            </div>
+
+     
+
+
+
+</div>
+       
+    
     <script  src="./js/vuex.js"></script>
     <script  src="./js/vue.js"></script>
     <script  src="./js/main.js"></script>
