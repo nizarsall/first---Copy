@@ -182,7 +182,7 @@ template:`
     <div></div>
     <div></div>
     <div>
-    <div style="background-color: aliceblue;">
+    <div class="mytext" style="font-size:20px; margin:0px">
     <span>ingreadents :</span>
     <ul >
         <li v-for="(inge,index) in recipe.ings">{{inge.name}} ({{inge.quantity}}) <button class="minusebutton" @click="reming(index)">-</button>  </li>
@@ -211,7 +211,7 @@ data(){
             ings:[]
           },
         ing:{name:"",
-        quantity:""},
+        quantity:0},
         
     }
 }
@@ -219,7 +219,7 @@ data(){
     methods:
     {
        adding:function(){
-           if(this.ing.name!=""&& this.ing.quantity!=""){
+           if(this.ing.name!=""&& this.ing.quantity>0){
            let k ={ name:this.ing.name, quantity:this.ing.quantity  }
            this.recipe.ings.push(k);
            this.ing.name="";
@@ -227,7 +227,7 @@ data(){
        }},
        reming:function(n){
            
-               this.recipe.ings.splice(n,0)
+               this.recipe.ings.splice(n,1)
            
        },
        addrecipe:function()
@@ -236,8 +236,8 @@ data(){
            else if(this.recipe.desc==""){ alert('Please provide a desc');}
            else if(this.recipe.ings.length==0){alert('please add ingredants')}
            else{
-            eventbus.$emit('doneadd')
-           this.$store.commit('addrecipe',this.recipe)
+            eventbus.$emit('doneadd');
+           this.$store.commit('addrecipe',this.recipe); 
             
         }
        },
@@ -366,6 +366,7 @@ Vue.component('taps',{
     
 template:`
 <div>
+
 <button  v-for="(tap,index) in taps"  :kye='index' @click="selectedtap = tap" :class="{activeTab: selectedtap === tap }">
 {{tap}}
 
@@ -395,14 +396,31 @@ Vue.component('mylist',{
     template:`
     <div style="position: fixed; top: 60px; right: 0%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;">
         <ul>
-            <li style="color: seashell;font-size=50px" v-for="item in shopinglist" >
-                {{item.name}} <input type="number" v-model="item.quantity" class="numinput">
+            <li style="color: seashell;font-size=50px" v-for="(item,index) in shopinglist" >
+                {{item.name}} <input type="number" v-model.number="item.quantity" class="numinput" @focus="recin=index">
             </li>
         </ul>
     </div>
     `,
+    data(){return{
+        recin:0,}
+    },
     computed:{
-        shopinglist(){return this.$store.state.shopinglist}
+        shopinglist(){return this.$store.state.shopinglist},
+        item(){return this.shopinglist[this.recin].quantity}
+    },
+    watch:{
+        shopinglist:
+        {
+          deep:true,
+          handler(newval)
+          {
+             if(newval[this.recin].quantity<1)
+             {
+                 newval[this.recin].quantity=1;
+             }
+          }
+        }
     }
 })
 
@@ -449,9 +467,10 @@ var app = new Vue({
         sel(n){return this.sr==n }
     },
     mounted(){
-        eventbus.$on('loged' ,data=>{this.logeed=true})
+        eventbus.$on('doneadd',data=>{this.addmode=false;})
+        eventbus.$on('loged' ,data=>{this.logeed=true;this.vis=false})
         eventbus.$on('doneed',data=>{this.sr=""})
-        eventbus.$on('doneadd',data=>{this.addmode=false})
+        
     },
     
  computed:{
