@@ -1,0 +1,1 @@
+<taps class="stap" v-show="vis" ></taps>
