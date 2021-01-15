@@ -28,7 +28,14 @@ mutations:{
     },
     addrecipe(state,rec)
     {
-        state.recipes.push(rec)
+        let trec={name:rec.name,
+         img:rec.img ,
+        desc:rec.desc,
+        ings:rec.ings
+        
+        
+        }
+        state.recipes.push(trec);
     },
     addsh(state,ingr)
     {
@@ -175,7 +182,7 @@ template:`
     <div></div>
     <div></div>
     <div>
-    <div style="background-color: aliceblue;">
+    <div class="mytext" style="font-size:20px; margin:0px">
     <span>ingreadents :</span>
     <ul >
         <li v-for="(inge,index) in recipe.ings">{{inge.name}} ({{inge.quantity}}) <button class="minusebutton" @click="reming(index)">-</button>  </li>
@@ -204,7 +211,7 @@ data(){
             ings:[]
           },
         ing:{name:"",
-        quantity:""},
+        quantity:0},
         
     }
 }
@@ -212,7 +219,7 @@ data(){
     methods:
     {
        adding:function(){
-           if(this.ing.name!=""&& this.ing.quantity!=""){
+           if(this.ing.name!=""&& this.ing.quantity>0){
            let k ={ name:this.ing.name, quantity:this.ing.quantity  }
            this.recipe.ings.push(k);
            this.ing.name="";
@@ -220,7 +227,7 @@ data(){
        }},
        reming:function(n){
            
-               this.recipe.ings.splice(n,0)
+               this.recipe.ings.splice(n,1)
            
        },
        addrecipe:function()
@@ -228,8 +235,11 @@ data(){
            if(this.recipe.name==""){ alert('Please provide a recipe name');}
            else if(this.recipe.desc==""){ alert('Please provide a desc');}
            else if(this.recipe.ings.length==0){alert('please add ingredants')}
-           else
-           this.$store.commit('addrecipe',this.recipe)
+           else{
+            eventbus.$emit('doneadd');
+           this.$store.commit('addrecipe',this.recipe); 
+            
+        }
        },
        selectimg:function(event)
        {
@@ -356,6 +366,7 @@ Vue.component('taps',{
     
 template:`
 <div>
+
 <button  v-for="(tap,index) in taps"  :kye='index' @click="selectedtap = tap" :class="{activeTab: selectedtap === tap }">
 {{tap}}
 
@@ -386,7 +397,7 @@ Vue.component('mylist',{
     <div style="position: fixed; top: 60px; right: 0%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;">
         <ul>
             <li style="color: seashell;font-size=50px" v-for="item in shopinglist" >
-                {{item.name}} <input type="number" v-model="item.quantity" class="numinput">
+                {{item.name}} <input type="number" v-model.number="item.quantity" class="numinput">
             </li>
         </ul>
     </div>
@@ -439,8 +450,10 @@ var app = new Vue({
         sel(n){return this.sr==n }
     },
     mounted(){
-        eventbus.$on('loged' ,data=>{this.logeed=true})
+        eventbus.$on('doneadd',data=>{this.addmode=false;})
+        eventbus.$on('loged' ,data=>{this.logeed=true;this.vis=false})
         eventbus.$on('doneed',data=>{this.sr=""})
+        
     },
     
  computed:{
