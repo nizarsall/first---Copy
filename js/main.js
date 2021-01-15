@@ -59,6 +59,10 @@ mutations:{
         state.recipes[re.reindex].name=re.name;
         state.recipes[re.reindex].desc=re.desc;
         state.recipes[re.reindex].ings=re.ings;
+    },
+    updatelist(state,recin){
+
+        state.shopinglist[recin.in].quantity=recin.n;
     }
 
 }
@@ -173,7 +177,7 @@ template:`
     <input type="text" v-model="recipe.name" style="width:98%;"  required placeholder="Rcipe name">
     
     </div>
-    <div></div>
+    <div> <input type="file" @change="selectimg" :style="styleobj"> </div>
     <div></div>
     <div>
     <input type="text" v-model="recipe.desc" style="height:50px;width:98%;"  required placeholder="Description">
@@ -185,9 +189,9 @@ template:`
     <div class="mytext" style="font-size:20px; margin:0px">
     <span>ingreadents :</span>
     <ul >
-        <li v-for="(inge,index) in recipe.ings">{{inge.name}} ({{inge.quantity}}) <button class="minusebutton" @click="reming(index)">-</button>  </li>
+        <li v-for="(inge,index) in recipe.ings" style="margin:0px">{{inge.name}} ({{inge.quantity}}) <button class="minusebutton" @click="reming(index)">-</button>  </li>
     </ul>
-    <input type="text" v-model="ing.name" placeholder="ingrediant name">
+    <input type="text" v-model="ing.name" placeholder="ingrediant name" style="width:150px">
     <input type="number" v-model="ing.quantity" class="numinput">
     <button @click="adding" class="minusebutton" style="color: #1E95EA;">+</button>
     
@@ -212,6 +216,10 @@ data(){
           },
         ing:{name:"",
         quantity:0},
+        styleobj:{
+            
+            
+        }
         
     }
 }
@@ -244,8 +252,14 @@ data(){
        selectimg:function(event)
        {
            
-           this.recipe.img=event.target.files[0].src
-       }
+           let img=event.target.files[0];
+           let reader= new FileReader();
+           reader.readAsDataURL(img);
+           reader.onload=event=>{this.recipe.img=event.target.result}
+
+       },
+       
+       
 
          
         
@@ -277,7 +291,7 @@ Vue.component('recedit',{
         <input type="text" v-model="recipe.name" style="width:98%;">
         
         </div>
-        <div></div>
+        <div> <input type="file" @change="selectimg" :style="styleobj">  </div>
         <div></div>
         <div>
         <input type="text" v-model="recipe.desc" style="height:50px;width:98%;">
@@ -286,20 +300,20 @@ Vue.component('recedit',{
         <div></div>
         <div></div>
         <div>
-        <div style="background-color: aliceblue;">
+        <div style="margin:0px; font-size:20px" class="mytext">
         <span>ingreadents :</span>
         <ul >
             <li v-for="(inge,index) in recipe.ings">{{inge.name}} ({{inge.quantity}}) <button class="minusebutton" @click="reming(index)">-</button>  </li>
         </ul>
-        <input type="text" v-model="ing.name" placeholder="ingrediant name">
+        <input type="text" v-model="ing.name" placeholder="ingrediant name" style="width:150px">
         <input type="number" v-model="ing.quantity" class="numinput">
         <button @click="adding" class="minusebutton" style="color: #1E95EA;">+</button>
         
         </div>
-        
+        <button @click="editrecipe" style="vertical-align: bottom; margin-left: 30px;">Edit recipe</button>
         </div>
         <div>
-        <button @click="editrecipe" style="vertical-align: bottom; margin-left: 30px;">Edit recipe</button>
+        
         </div>
         
     </div>
@@ -316,6 +330,7 @@ Vue.component('recedit',{
               },
             ing:{name:"",
             quantity:""},
+            styleobj:{}
             
         }
     }
@@ -341,10 +356,14 @@ Vue.component('recedit',{
             eventbus.$emit('doneed');
            },
            selectimg:function(event)
-           {
-               
-               this.recipe.img=event.target.files[0].src
-           },
+       {
+           
+           let img=event.target.files[0];
+           let reader= new FileReader();
+           reader.readAsDataURL(img);
+           reader.onload=event=>{this.recipe.img=event.target.result}
+
+       },
            
     
              
@@ -396,17 +415,34 @@ Vue.component('mylist',{
     template:`
     <div style="position: fixed; top: 60px; right: 0%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;">
         <ul>
-            <li style="color: seashell;font-size=50px" v-for="item in shopinglist" >
-                {{item.name}} <input type="number" v-model.number="item.quantity" class="numinput">
+            <li style="color: seashell;font-size=50px" v-for="(item,index) in shopinglist" >
+                {{item.name}} <input type="number" v-model.number="item.quantity" class="numinput" @focus="recin=index">
             </li>
         </ul>
     </div>
     `,
+    data(){return{
+        recin:0,}
+    },
     computed:{
-        shopinglist(){return this.$store.state.shopinglist}
+        shopinglist(){return this.$store.state.shopinglist},
+        item(){return this.shopinglist[this.recin].quantity}
     },
     watch:{
-        
+        shopinglist:
+        {
+          deep:true,
+          handler(newval)
+          {
+             if(newval[this.recin].quantity<1)
+             {
+                 newval[this.recin].quantity=1;
+             }
+             else{
+                 this.$store.commit('updatelist',{in:this.recin,n:newval[this.recin].quantity})
+             }
+          }
+        }
     }
 })
 
