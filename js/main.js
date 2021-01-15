@@ -404,6 +404,9 @@ Vue.component('mylist',{
     `,
     computed:{
         shopinglist(){return this.$store.state.shopinglist}
+    },
+    watch:{
+        
     }
 })
 
