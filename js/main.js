@@ -28,7 +28,14 @@ mutations:{
     },
     addrecipe(state,rec)
     {
-        state.recipes.push(rec)
+        let trec={name:rec.name,
+         img:rec.img ,
+        desc:rec.desc,
+        ings:rec.ings
+        
+        
+        }
+        state.recipes.push(trec);
     },
     addsh(state,ingr)
     {
@@ -163,13 +170,13 @@ template:`
 
     <div>
     
-    <input type="text" v-model="recipe.name" style="width:98%;"  required>
+    <input type="text" v-model="recipe.name" style="width:98%;"  required placeholder="Rcipe name">
     
     </div>
     <div></div>
     <div></div>
     <div>
-    <input type="text" v-model="recipe.desc" style="height:50px;width:98%;"  required>
+    <input type="text" v-model="recipe.desc" style="height:50px;width:98%;"  required placeholder="Description">
 
     </div>
     <div></div>
@@ -212,11 +219,12 @@ data(){
     methods:
     {
        adding:function(){
+           if(this.ing.name!=""&& this.ing.quantity!=""){
            let k ={ name:this.ing.name, quantity:this.ing.quantity  }
            this.recipe.ings.push(k);
            this.ing.name="";
            this.ing.quantity="";
-       },
+       }},
        reming:function(n){
            
                this.recipe.ings.splice(n,0)
@@ -224,8 +232,14 @@ data(){
        },
        addrecipe:function()
        {
-           
+           if(this.recipe.name==""){ alert('Please provide a recipe name');}
+           else if(this.recipe.desc==""){ alert('Please provide a desc');}
+           else if(this.recipe.ings.length==0){alert('please add ingredants')}
+           else{
+            eventbus.$emit('doneadd')
            this.$store.commit('addrecipe',this.recipe)
+            
+        }
        },
        selectimg:function(event)
        {
@@ -437,6 +451,7 @@ var app = new Vue({
     mounted(){
         eventbus.$on('loged' ,data=>{this.logeed=true})
         eventbus.$on('doneed',data=>{this.sr=""})
+        eventbus.$on('doneadd',data=>{this.addmode=false})
     },
     
  computed:{
