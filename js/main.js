@@ -19,7 +19,8 @@ state:{
         desc:"chees , meat and saus",
         ings:[{name:"bread",quantity:2},{name:"mozarilla",quantity:1},{name:"tomatos",quantity:4},{name:"olive",quantity:5}]
       }],
-      shopinglist:[]
+      shopinglist:[],
+      t:{}
 },
 mutations:{
     signup(state,user){
@@ -29,23 +30,19 @@ mutations:{
     {
         state.recipes.push(rec)
     },
-    addsh(state,inge)
+    addsh(state,ingr)
     {
-        let t=false;
-        for(i=0;i<state.shopinglist.length;i++)
-        {
-            let te= inge.quantity;
-            if(state.shopinglist[i].name==inge.name)
-            {
-                
-                t=true;
-                
+           let ting={name:ingr.name,quantity:ingr.quantity};
+         let tting= state.shopinglist.findIndex(element=>element.name==ting.name);
+         
+            state.t=tting;
+            if(tting==-1){
+            state.shopinglist.push(ting);
             }
-        }
-        if(!t){
-            state.shopinglist.push(inge)
-        }
-        
+            else{
+              state.shopinglist[tting].quantity+=ting.quantity;
+            }
+    
     },
     delrec(state, n)
     {
@@ -382,7 +379,7 @@ mounted(){
 
 Vue.component('mylist',{
     template:`
-    <div style="position: absolute; top: 60px; right: 0%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;">
+    <div style="position: fixed; top: 60px; right: 0%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;">
         <ul>
             <li style="color: seashell;font-size=50px" v-for="item in shopinglist" >
                 {{item.name}} <input type="number" v-model="item.quantity" class="numinput">
