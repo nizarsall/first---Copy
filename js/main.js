@@ -63,6 +63,10 @@ mutations:{
     updatelist(state,recin){
 
         state.shopinglist[recin.in].quantity=recin.n;
+    },
+    removeing(state,ingind)
+    {
+        state.shopinglist.splice(ingind,1);
     }
 
 }
@@ -422,6 +426,7 @@ Vue.component('mylist',{
         <ul>
             <li style="color: seashell;font-size=50px" v-for="(item,index) in shopinglist" >
                 {{item.name}} <input type="number" v-model.number="item.quantity" class="numinput" @focus="recin=index">
+                <button @click="rming(index)" class="minusebutton">(-)</button>
             </li>
         </ul>
     </div>
@@ -447,6 +452,12 @@ Vue.component('mylist',{
                  this.$store.commit('updatelist',{in:this.recin,n:newval[this.recin].quantity})
              }
           }
+        }
+    },
+    methods:{
+        rming(ingind)
+        {
+            this.$store.commit('removeing',ingind)
         }
     }
 })
