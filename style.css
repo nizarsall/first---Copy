@@ -116,7 +116,7 @@ body{
     background-color:transparent;
     border-style: none;
     border-bottom: solid gray;
-   
+    
     -webkit-backdrop-filter: opacity(50%);
     outline: none;
     width: 190px;

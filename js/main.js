@@ -177,15 +177,10 @@ template:`
     <input type="text" v-model="recipe.name" style="width:98%;"  required placeholder="Rcipe name">
     
     </div>
-    <div> <input type="file" @change="selectimg" :style="styleobj"> </div>
+    <div><input type="file" @change="selectimg" style="width 20px">   </div>
     <div></div>
     <div>
     <input type="text" v-model="recipe.desc" style="height:50px;width:98%;"  required placeholder="Description">
-
-    </div>
-    <div></div>
-    <div></div>
-    <div>
     <div class="mytext" style="font-size:20px; margin:0px">
     <span>ingreadents :</span>
     <ul >
@@ -193,13 +188,18 @@ template:`
     </ul>
     <input type="text" v-model="ing.name" placeholder="ingrediant name" style="width:150px">
     <input type="number" v-model="ing.quantity" class="numinput">
-    <button @click="adding" class="minusebutton" style="color: #1E95EA;">+</button>
+    <button @click="adding" class="minusebutton" style="color: white;">+</button>
     
     </div>
+    </div>
+    <div> <img :src="recipe.img" style="margin:10px; height:200px; width:200px; position:absloute; z-index:8; top:20%;right:0%; border-radius:20px;"> 
+    
     
     </div>
+    <div></div>
+    <button @click="addrecipe" style="margin:0px; position:absloute; right:0%">Add recipe</button>
     <div>
-    <button @click="addrecipe" style="vertical-align: bottom; margin-left: 30px;">Add recipe</button>
+    
     </div>
     
 </div>
@@ -210,7 +210,7 @@ data(){
     return{
         recipe:{
             name:"",
-            img:"./pics/Image-512.jpg",
+            img:"./pics/unnamed.png",
             desc:"",
             ings:[]
           },
@@ -243,10 +243,14 @@ data(){
            if(this.recipe.name==""){ alert('Please provide a recipe name');}
            else if(this.recipe.desc==""){ alert('Please provide a desc');}
            else if(this.recipe.ings.length==0){alert('please add ingredants')}
+           else if(this.recipe.img=="./pics/unnamed.png"){alert('please add an image')}
            else{
-            eventbus.$emit('doneadd');
+            eventbus.$emit('doit')
            this.$store.commit('addrecipe',this.recipe); 
-            
+           this.recipe.name="",
+           this.recipe.desc="",
+           this.recipe.img="./pics/unnamed.png"
+            this.recipe.ings=[];
         }
        },
        selectimg:function(event)
@@ -295,21 +299,22 @@ Vue.component('recedit',{
         <div></div>
         <div>
         <input type="text" v-model="recipe.desc" style="height:50px;width:98%;">
-    
-        </div>
-        <div></div>
-        <div></div>
-        <div>
-        <div style="margin:0px; font-size:20px" class="mytext">
+        <div style="margin:0px; font-size:20px; position:absloute; top:40% ; left:0%" class="mytext">
         <span>ingreadents :</span>
         <ul >
             <li v-for="(inge,index) in recipe.ings">{{inge.name}} ({{inge.quantity}}) <button class="minusebutton" @click="reming(index)">-</button>  </li>
         </ul>
         <input type="text" v-model="ing.name" placeholder="ingrediant name" style="width:150px">
         <input type="number" v-model="ing.quantity" class="numinput">
-        <button @click="adding" class="minusebutton" style="color: #1E95EA;">+</button>
+        <button @click="adding" class="minusebutton" style="color: white;">+</button>
         
         </div>
+        </div>
+        
+        <div> <img :src="recipe.img" style="margin:10px; height:200px; width:200px; position:absloute; z-index:8; top:20%;right:0%; border-radius:20px;">  </div>
+        <div></div>
+        <div>
+        
         <button @click="editrecipe" style="vertical-align: bottom; margin-left: 30px;">Edit recipe</button>
         </div>
         <div>
@@ -454,6 +459,7 @@ var app = new Vue({
       vis:false,
      sr:"",
      editmode:false,
+     addmode:false,
      re:null,
      recipe:{
         name:"",
@@ -461,7 +467,7 @@ var app = new Vue({
         desc:"",
         ings:[]
       },
-      addmode:false,
+      
       reindex:0,
       vis2:false,
       logeed:false
@@ -486,10 +492,11 @@ var app = new Vue({
             this.$store.commit('delrec',n)
             sr=""
         },
-        sel(n){return this.sr==n }
+        sel(n){return this.sr==n },
+        addition(){this.addmode=true}
     },
     mounted(){
-        eventbus.$on('doneadd',data=>{this.addmode=false;})
+        eventbus.$on('doit' , data=>{this.addmode=false})
         eventbus.$on('loged' ,data=>{this.logeed=true;this.vis=false})
         eventbus.$on('doneed',data=>{this.sr=""})
         
