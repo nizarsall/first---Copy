@@ -184,7 +184,7 @@ template:`
     <div><input type="file" @change="selectimg" style="width 20px">   </div>
     <div></div>
     <div>
-    <input type="text" v-model="recipe.desc" style="height:50px;width:98%;"  required placeholder="Description">
+    <input type="text" v-model="recipe.desc" style="height:100px;width:98%; font-size: 15px; "  required placeholder="Description">
     <div class="mytext" style="font-size:20px; margin:0px">
     <span>ingreadents :</span>
     <ul >

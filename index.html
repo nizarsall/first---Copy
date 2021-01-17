@@ -4,15 +4,17 @@
 <body >
     
 <div id="app" class="stuff" >
+    <div style="height: 150%; width: 100%;position: fixed; z-index:8 ; backdrop-filter: blur(10px); " v-show="vis"></div>
     <div class="nav-bar">
         <button style="margin-left: 0px; height: 100%;margin-top: 0px;width: 20%;" @click="vis= !vis" v-show="!logeed">
            signup or login
         </button>
         <button  style="position: fixed;right: 0%;top: 0; height: 60px;margin-top: 0px; margin-right: 0px; z-index: 6 ;" @click="vis2 =!vis2">  shoping list </button>
     </div>
+    
     <mylist v-show="vis2"></mylist>
     <taps class="stapl" v-show="vis&&!logeed" ></taps>
-    <button class="minusebutton" style="position: fixed; right: 46%;top: 30%; margin:0px; z-index: 7;" v-show="vis" @click="vis= !vis">X</button>
+    <button class="minusebutton" style="position: fixed; right: 46%;top: 32%; margin:0px; z-index: 10;" v-show="vis" @click="vis= !vis">X</button>
     
 
     <div class="container" v-for="(rec,index) in recipes"  >
