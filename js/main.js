@@ -423,7 +423,7 @@ mounted(){
 
 Vue.component('mylist',{
     template:`
-    <div style="position: fixed; top: 60px; right: 0%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;">
+    <div style="position: fixed; top: 60px; right: -1%; background-color: rgba(70, 133, 252, .5); height: wrap; z-index: 5; width:20%;backdrop-filter: blur(10px);border-radius:20px;">
         <ul>
             <li style="color: seashell;font-size=50px" v-for="(item,index) in shopinglist" >
                 {{item.name}} <input type="number" v-model.number="item.quantity" class="numinput" @focus="recin=index">
