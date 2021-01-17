@@ -302,7 +302,7 @@ Vue.component('recedit',{
         <div> <input type="file" @change="selectimg" :style="styleobj">  </div>
         <div></div>
         <div>
-        <input type="text" v-model="recipe.desc" style="height:50px;width:98%;">
+        <input type="text" v-model="recipe.desc" style="height:100px;width:98%; font-size: 15px;text-align: start;">
         <div style="margin:0px; font-size:20px; position:absloute; top:40% ; left:0%" class="mytext">
         <span>ingreadents :</span>
         <ul >
@@ -346,12 +346,13 @@ Vue.component('recedit',{
     ,
         methods:
         {
-           adding:function(){
-               let k ={ name:this.ing.name, quantity:this.ing.quantity  }
-               this.recipe.ings.push(k);
-               this.ing.name="";
-               this.ing.quantity="";
-           },
+            adding:function(){
+                if(this.ing.name!=""&& this.ing.quantity>0){
+                let k ={ name:this.ing.name, quantity:this.ing.quantity  }
+                this.recipe.ings.push(k);
+                this.ing.name="";
+                this.ing.quantity="";
+            }},
            reming:function(n){
                
                
